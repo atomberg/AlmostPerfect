@@ -8,7 +8,44 @@ Created on Mon Sep 14 10:55:45 2015
 import urllib
 import math
 import numpy as np
-import pandas as pd   
+import pandas as pd  
+import nltk
+from sklearn.utils import resample 
+
+def text_to_sentence_list(text):
+    sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
+    return sent_detector.tokenize(text)
+
+def get_random_snippet_sent(sentence_list, token): 
+    target = resample([s for s in sentence_list if token in s.lower()], n_samples = 1)[0]
+    idx = sentence_list.index(target) 
+    return " ".join(sentence_list[max(idx - 1,0) : idx + 2])
+
+def get_all_snippets_sent(sentence_list, token): 
+    targets = [s for s in sentence_list if token in s.lower()]
+    indices = [sentence_list.index(t) for t in targets] 
+    return [" ".join(sentence_list[max(idx - 1,0) : idx + 2]) for idx in indices]
+
+def get_reviews_containing_token (reviews_df, vectorizer, features, token):
+    index_of_token = vectorizer.get_feature_names().index(token)
+    docs_containing_token = features[index_of_token].nonzero()[1]
+    return reviews_df.iloc[docs_containing_token]
+
+def build_snippets_dict (reviews_df, vectorizer, features, token):
+    chunk = get_reviews_containing_token(reviews_df, vectorizer, features, token)
+    pos_snippets = []
+    neg_snippets = []
+    for ri, row in chunk[chunk['Positive']].iterrows():
+        slist = text_to_sentence_list(row['Content'].replace('.', '. '))
+        result = get_all_snippets_sent(slist, token)
+        if result != []:
+            pos_snippets.append(result)
+    for ri, row in chunk[~chunk['Positive']].iterrows():
+        slist = text_to_sentence_list(row['Content'].replace('.', '. '))
+        result = get_all_snippets_sent(slist, token)
+        if result != []:
+            neg_snippets.append(result)
+    return {"positive" : pos_snippets, "negative": neg_snippets}
 
 def pmi_from_counts(passage_count, passage_len, corpus_count, corpus_len):
 	try:

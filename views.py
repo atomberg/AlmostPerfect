@@ -37,13 +37,20 @@ def get_product_results(product_id):
                     'rating':      reviews_df['Overall'].mean()}
 
     words_df = words_df.sort('score').head(5)
+    
+    tokens = words_df.index
+    snippets = {}    
+    for token in tokens:
+        snippets[token] = build_snippets_dict(reviews_df, vec, features, token)
+    
     words_df['links'] = words_df.index.map(links_to_all_reviews(product_id))
     words_df['score'] = words_df['score'].map(np.absolute)
     words_df = words_df.reset_index()
 
     data = words_df[['tot_count', 'tokens', 'links']].to_dict()
-
-    return jsonify({'product_info': info, 'data': data})
+    
+    
+    return jsonify({'product_info': info, 'data': data, 'snippets': snippets})
     
 
 
