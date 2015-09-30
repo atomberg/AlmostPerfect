@@ -1,7 +1,9 @@
-function initializeChart (chart_number, info) {
+function initializeChart (chart_number, data) {
 	d3.select('#charts_container').insert("div",":first-child")
 		.attr('id',"barchart" + chart_number)
 		.attr('class', "product_container");
+
+
 
 	var svg = d3.select("#barchart" + chart_number)
 		.append('svg')
@@ -11,22 +13,66 @@ function initializeChart (chart_number, info) {
 
 	var prodInfo = d3.select("#barchart" + chart_number)
 		.append('div')
+		.attr('style', "padding: 20px; float: left");
+
+	var prodInfoList = prodInfo.append('ul').attr('class', "list-unstyled");
+
+	prodInfo.selectAll('infotext')
+		.data(["Product info for " + data.info.product_id, 
+			data.info.tot_reviews + " reviews, " + data.info.pos_reviews + " positive", 
+			data.info.rating.toFixed(2) + " avg rating"])
+		.enter().append('li')
+			.attr('style', "font-size: 18px")
+			.text(function(d) {return d;});
+
+	prodInfo.append('p')
+		.attr('style', "font-size: 18px")
+		.text("Hide review snippets")
+		.on("click", function(){
+			var isHidden = d3.select("#snippets" + chart_number)
+						.style('display') == 'none';
+			//this.text("Show review snippets");
+			d3.select("#snippets" + chart_number)
+				.style('display', isHidden ? 'inherit' : 'none');
+		});
+
+	var snip = d3.select("#barchart" + chart_number)
+		.append('div')
+		.attr('id', "snippets" + chart_number)
 		.attr('style', "padding: 20px; float: left")
 			.append('ul')
 			.attr('class', "list-unstyled");
 
-	
-	prodInfo.selectAll('text')
-		.data(["Product info for " + info.product_id, 
-			info.tot_reviews + " reviews, " + info.pos_reviews + " positive", 
-			info.rating.toFixed(2) + " avg rating"])
-		.enter().append('li')
-			.attr('style', "font-size: 18px")
-			.text(function(d){return d;});
+	var bq = snip.selectAll('sniptext')
+		.data(getSnippetList(data))
+		.enter().append('li').append('blockquote')
 
-		
+	bq.append('p').append('small')
+		.attr('style', "font-size: 14px")
+		.text(function(d) {return d.token;})
+	bq.append('p')
+		.attr('style', "font-size: 14px")
+		.text(function(d) {return "\"" + d.snippet + "\"";})
+
 	return svg;
 }
+
+// Returns a list of dicts of the form {token: "keyword", snippet: "text"}
+function getSnippetList (json_data) {
+	var snipList = [];
+
+	for(var k = 0; k < json_data.chart.length; k++){
+		var key = json_data.chart[k].token;
+		var neg_list = json_data.snippets[key].negative
+		snipList[k] = {token: key, snippet: neg_list[Math.floor(Math.random() * neg_list.length)]}
+	}
+
+	return snipList;
+}
+
+// var item = items[Math.floor(Math.random()*items.length)];
+
+//var data_global;
 
 var submitProductQuery = function() {
 	var product_ID = d3.select('#inputField').property('value');
@@ -34,7 +80,7 @@ var submitProductQuery = function() {
 	$.getJSON("product/" + product_ID, function(result){ 
 		console.log("Json request succeded!")
 		var data = processJSON(result);
-		var svg = initializeChart(chart_index, data.info);
+		var svg = initializeChart(chart_index, data);
 		drawChart(svg, data.chart);
 		chart_index++;
 	});
@@ -52,7 +98,7 @@ function processJSON (result) {
 	for (var i = 0; i < Object.keys(result.data.tokens).length; i++) {
 		data[i] = { token: result.data.tokens[i], value: result.data.tot_count[i], link: result.data.links[i]};
 	}
-	return {chart: data, info: result.product_info};
+	return {chart: data, info: result.product_info, snippets: result.snippets};
 }
 
 function drawChart(chart_selector, data){
@@ -86,9 +132,8 @@ function drawChart(chart_selector, data){
 		.attr('y', function(d, i) { return 15 + i * 22; })
 		.attr('x', function(d) { return 140 + d.value * len_factor; })
 		.attr('fill',"White")
-		.text(function(d) { return d.value.toFixed(2);})
+		.text(function(d) { return d.value;})
 		.attr("text-anchor", "end")
 		.attr('font-size', 14)
 		.attr('font-weight', 700);
 }
-

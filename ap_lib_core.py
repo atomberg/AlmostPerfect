@@ -38,13 +38,13 @@ def build_snippets_dict (reviews_df, vectorizer, features, token):
     for ri, row in chunk[chunk['Positive']].iterrows():
         slist = text_to_sentence_list(row['Content'].replace('.', '. '))
         result = get_all_snippets_sent(slist, token)
-        if result != []:
-            pos_snippets.append(result)
+#        if result != []:
+        pos_snippets = pos_snippets + result
     for ri, row in chunk[~chunk['Positive']].iterrows():
         slist = text_to_sentence_list(row['Content'].replace('.', '. '))
         result = get_all_snippets_sent(slist, token)
-        if result != []:
-            neg_snippets.append(result)
+#        if result != []:
+        neg_snippets = neg_snippets + result
     return {"positive" : pos_snippets, "negative": neg_snippets}
 
 def pmi_from_counts(passage_count, passage_len, corpus_count, corpus_len):
