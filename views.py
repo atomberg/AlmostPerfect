@@ -12,6 +12,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 #from a_Model import ModelIt
 
 db_connection_engine = create_engine('mysql://dummy:12345@127.0.0.1/amazon_reviews?charset=utf8')
+number_of_keywords_to_show = 4
 
 @app.route('/')
 @app.route('/index')
@@ -36,7 +37,7 @@ def get_product_results(product_id):
                     'neg_reviews': len(reviews_df) - pos_vec.sum(),
                     'rating':      reviews_df['Overall'].mean()}
 
-    words_df = words_df.sort('score').head(5)
+    words_df = words_df.sort('score').head(number_of_keywords_to_show)
     
     tokens = words_df.index
     snippets = {}    
@@ -75,7 +76,7 @@ def output():
                     'neg_reviews': len(reviews_df) - pos_vec.sum(),
                     'rating':      reviews_df['Overall'].mean()}
                     
-    words_df = words_df.sort('score').head(5).reset_index()
+    words_df = words_df.sort('score').head(number_of_keywords_to_show).reset_index()
     words_df['args'] = words_df['tokens'].map(lambda x: "reviews?" + 
                             urllib.urlencode({'ID': product_id, 'keyword': x}))
 

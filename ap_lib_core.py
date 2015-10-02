@@ -5,26 +5,32 @@ Created on Mon Sep 14 10:55:45 2015
 @author: atomberg
 """
 
-import urllib
+import urllib, re
 import math
 import numpy as np
 import pandas as pd  
 import nltk
-from sklearn.utils import resample 
+from sklearn.utils import resample
+from flask import Markup 
 
 def text_to_sentence_list(text):
     sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
     return sent_detector.tokenize(text)
 
+def boldify(token, text):
+    r = re.compile("[\W]" + token + "[\W]", re.IGNORECASE) 
+    return Markup(r.sub(' <span class="badge"><big>%s</big></span> ' % token, text))
+
 def get_random_snippet_sent(sentence_list, token): 
     target = resample([s for s in sentence_list if token in s.lower()], n_samples = 1)[0]
-    idx = sentence_list.index(target) 
-    return " ".join(sentence_list[max(idx - 1,0) : idx + 2])
+    idx = sentence_list.index(target)   
+    return boldify(token, " ".join(sentence_list[max(idx - 1,0) : idx + 2]))
 
 def get_all_snippets_sent(sentence_list, token): 
     targets = [s for s in sentence_list if token in s.lower()]
     indices = [sentence_list.index(t) for t in targets] 
-    return [" ".join(sentence_list[max(idx - 1,0) : idx + 2]) for idx in indices]
+    snippets = [" ".join(sentence_list[max(idx - 1,0) : idx + 2]) for idx in indices]   
+    return [boldify(token, snip) for snip in snippets]
 
 def get_reviews_containing_token (reviews_df, vectorizer, features, token):
     index_of_token = vectorizer.get_feature_names().index(token)
