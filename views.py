@@ -83,6 +83,14 @@ def output():
     return render_template("output.html", table =  words_df.to_dict(orient = 'records'), 
                            stats = info, product_ID = product_id)
 
+@app.route("/productinfo/<path:product_id>")
+def product_info(product_id):
+    query = "SELECT Title, Description, Image FROM products WHERE ProductID = '%s';" % product_id
+    result = pd.read_sql(sql = query, con = db_connection_engine).to_dict(orient = 'records')[0]
+
+    return jsonify({'title': result['Title'], 
+                    'desc':  result['Description'],
+                    'img':   result['Image']})
 
 @app.route("/reviews/<path:product_id>")
 def reviews_table(product_id):

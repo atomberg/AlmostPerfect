@@ -2,33 +2,22 @@ function initializeChart (chart_number, data) {
 	var top_container = d3.select('#charts_container')
 				.insert("div",":first-child")
 				.attr('id',"barchart" + chart_number)
-				.attr('style', "background-color: lightgrey; margin: 10px 0")
+				.attr('style', "background-color: white; margin: 10px 0")
 				.attr('class', "product_container")
 					.append('div')
 					.attr('class', "container")
 					.attr('style', "margin: 10px 0; padding: 10px 0");
 
 	var title_row = top_container.append('div')
-			.attr('class', "row");			
-	title_row.append('div')
-		.attr('class', "col-xs-4")
-			.append('p')
-			.attr('class', "lead")
-			.attr('style', "text-align: center")
-			.text(data.info.product_id);
-	title_row.append('div')
-		.attr('class', "col-xs-8 cold-md-6")
-			.append('p')
-			.attr('class', "lead")
-			.text('Title of the product on Amazon');
-
+			.attr('class', "row");				
+	
 	var data_row = top_container.append('div')
 			.attr('class', "row");
 	var chart_slot = data_row.append('div')
-		.attr('class', "col-xs-7");
+		.attr('class', "col-xs-6");
 
 	var prodInfo = data_row.append('div')
-				.attr('class', "col-xs-5");
+				.attr('class', "col-xs-6");
 
 	var svg = chart_slot.append('svg')
 				.attr('width', chart_slot.node().getBoundingClientRect().width)
@@ -36,17 +25,49 @@ function initializeChart (chart_number, data) {
 				.attr('style', "margin: 10px");
 
 
-	var prodInfoList = prodInfo.append('ul').attr('class', "list-unstyled");
-
-	prodInfo.selectAll('infotext')
-		.data([//"Product info for " + data.info.product_id, 
-			data.info.tot_reviews + " reviews, " + data.info.pos_reviews + " positive", 
-			data.info.rating.toFixed(2) + " avg rating"])
-		.enter().append('li')
-			.attr('style', "font-size: 18px")
-			.text(function(d) {return d;});
 
 
+	$.getJSON("productinfo/" + data.info.product_id, function(response){ 
+		console.log("Json info request succeded!");
+		
+		title_row.append('div')
+			.attr('class', "col-xs-4")
+				.append('p')
+				.attr('class', "lead")
+				.attr('style', "text-align: center")
+				.text(data.info.product_id);
+		title_row.append('div')
+			.attr('class', "col-xs-6 cold-md-6")
+				.append('p')
+				.attr('class', "lead")
+				.text(response.title)
+//		title_row.append('div')
+//			.attr('class', "col-xs-2 cold-md-6");
+
+		var prodInfoStats = prodInfo.append('div')
+					.attr('class', "row");
+		var prodInfoList = prodInfoStats.append('div').attr('class', "col-xs-6")
+					.append('ul')
+					.attr('class', "list-unstyled");
+
+		prodInfoList.selectAll('infotext')
+			.data([	data.info.tot_reviews + " reviews, " + data.info.pos_reviews + " positive", 
+				data.info.rating.toFixed(2) + " avg rating"])
+			.enter().append('li')
+				.attr('style', "font-size: 18px")
+				.text(function(d) {return d;});
+
+		prodInfoStats.append('div').attr('class', "col-xs-6")
+				.append('img')
+				.attr('src', response.img)
+				.attr('alt', response.title)
+				.attr('style', "height: " + prodInfoList.node().getBoundingClientRect().height +"px");
+
+		prodInfo.append('p')
+			.text(response.desc);
+
+	});
+//<img src="pic_mountain.jpg" alt="Mountain View" style="width:304px;height:228px;"> float: right
 
 	top_container.append('div').attr('class', "row")
 			.append('div').attr('class', "col-xs-2 col-xs-offset-5 text-center")
@@ -69,6 +90,10 @@ function initializeChart (chart_number, data) {
 
 	return svg;
 }
+
+
+
+
 
 function makeHideShowButton(toggle) {
 	if (toggle) {
@@ -123,7 +148,7 @@ var submitProductQuery = function() {
 	var product_ID = d3.select('#inputField').property('value');
 	console.log(product_ID);
 	$.getJSON("product/" + product_ID, function(result){ 
-		console.log("Json request succeded!")
+		console.log("Json request succeded!");
 		var data = processJSON(result);
 		data_global = data
 		var svg = initializeChart(chart_index, data);
