@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container">
+	<h3>Review search <small>Displaying reviews for {{productID}} containing the keyword "{{keyword}}"</small></h3>
+	<p class="lead"></p>
+</div>
+
+<div class = "container">
+	{% for row in table %}
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<spal class = "lead">{{ row['title'] }}</span>
+			<div class="pull-right">
+				<small> 
+				{% for k in range(row['rating']) %}
+					<span class = "glyphicon glyphicon-star-empty"></span>
+				{% endfor %}
+				</small>
+			</div>
+		</div>
+		<div class="panel-body">{{ row['content']}}</div>
+	</div>
+	{% endfor %}
+</div>
+{% endblock %}
+
+
+
+
