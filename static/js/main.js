@@ -13,11 +13,14 @@ function initializeChart (chart_number, data) {
 	
 	var data_row = top_container.append('div')
 			.attr('class', "row");
+	var img_slot = data_row.append('div')
+			.attr('class', "col-md-3")
 	var chart_slot = data_row.append('div')
-		.attr('class', "col-xs-6");
+			.attr('class', "col-md-6");
 
-	var prodInfo = data_row.append('div')
-				.attr('class', "col-xs-6");
+	chart_slot.append('div').attr('class', "row")
+			.append('div').attr('class', "col-xs-12")
+			.append('p').text("Keywords ranked by their scores and the number of reviews mentioning that keyword. Click on each keyword to see the reviews associated with it.");
 
 	var svg = chart_slot.append('svg')
 				.attr('width', chart_slot.node().getBoundingClientRect().width)
@@ -31,40 +34,19 @@ function initializeChart (chart_number, data) {
 		console.log("Json info request succeded!");
 		
 		title_row.append('div')
-			.attr('class', "col-xs-4")
-				.append('p')
-				.attr('class', "lead")
-				.attr('style', "text-align: center")
-				.text(data.info.product_id);
+			.attr('class', "col-xs-6")
+				.append('h4')
+				.html(response.title + "<br><small>" + data.info.product_id + "</small>");
 		title_row.append('div')
-			.attr('class', "col-xs-6 cold-md-6")
-				.append('p')
-				.attr('class', "lead")
-				.text(response.title)
-//		title_row.append('div')
-//			.attr('class', "col-xs-2 cold-md-6");
+			.attr('class', "col-xs-6")
+				.append('h4')
+				.html("Average rating " + data.info.rating.toFixed(1) + " out of 5 <br><small>" + data.info.tot_reviews + " reviews, " + data.info.pos_reviews + " positive </small>");
 
-		var prodInfoStats = prodInfo.append('div')
-					.attr('class', "row");
-		var prodInfoList = prodInfoStats.append('div').attr('class', "col-xs-6")
-					.append('ul')
-					.attr('class', "list-unstyled");
+		img_slot.append('img')
+			.attr('src', response.img)
+			.attr('alt', response.title)
+			.attr('style', "height: 150px; margin 10px");
 
-		prodInfoList.selectAll('infotext')
-			.data([	data.info.tot_reviews + " reviews, " + data.info.pos_reviews + " positive", 
-				data.info.rating.toFixed(2) + " avg rating"])
-			.enter().append('li')
-				.attr('style', "font-size: 18px")
-				.text(function(d) {return d;});
-
-		prodInfoStats.append('div').attr('class', "col-xs-6")
-				.append('img')
-				.attr('src', response.img)
-				.attr('alt', response.title)
-				.attr('style', "height: " + prodInfoList.node().getBoundingClientRect().height +"px");
-
-		prodInfo.append('p')
-			.text(response.desc);
 
 	});
 //<img src="pic_mountain.jpg" alt="Mountain View" style="width:304px;height:228px;"> float: right

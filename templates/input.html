@@ -2,18 +2,16 @@
 
 {% block content %}
 	   
-<p class="lead">Please enter an Amazon product ID.</p>
+<p class="lead">Choose a product from the list and we'll find you 4 keywords that are the most associated to its negative reviews. </p>
 
 
 <div class = "container">
 
 <form  action="/getresult" method="get" id="newProductForm">
    <div class="form-group">
-	<label for="ID" class='lead'>Amazon Product ID: </label>
-	<select id="inputField">
+	<label for="ID" class='lead'>Please pick a product: </label>
+	<select id="inputField" style="margin: 1px 20px;">
 	   <option value="B00FNPD1VW">Acer C720 Chromebook (11.6-Inch, 2GB)</option>
-		<option value="B00">Boo!</option>
-	   <option disabled>──────────</option>
 	   <option value="B00GZ1GV3I">Acer C720 Chromebook (11.6-Inch, 2GB & 32GB SSD)</option>
 	   <option value="B00FFJ0HUE">ASUS T100 10.1-Inch Detachable Laptop</option>
 	   <option value="B007470SMM">Apple MacBook Pro MD102LL/A 13.3-Inch Laptop</option>
