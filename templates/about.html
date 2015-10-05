@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<p class = "lead">
+	Hi, I'm Alex Tomberg. 
+	This app was developed in four weeks while I was an Insight Data Science Fellow in NYC. 
+ 	You can see my
+	<a href = "https://docs.google.com/presentation/d/1IGttq2_bJBx32FQIWQA61oyEMBBVLbYyje0t5WE40kU/pub?start=false&loop=false&delayms=60000" target = "_blank">presentation</a> 
+	about this app or check out its
+	<a href = "http://www.github.com/atomberg/AlmostPerfect" target = "_blank">source code</a> 
+	at GitHub.
+</p>
+<p class = "lead">
+	If you want to get in touch, here is my 
+	<a href = "mailto:a.tomberg@gmail.com">email</a> and my 
+	<a href = "http://ca.linkedin.com/in/atomberg" target = "_blank">LinkedIn profile</a>. 
+</p>
+<dl class = "lead">
+	<dt>Algorithm core:</dt><dd>Reviews are retrieved from the database and tokenized into unigrams and bigrams. 
+			The tokens are then scored using mutual information metric to detect those that are most associated with negative reviews.
+			The rest is bells and whistles.</dd>
+	<dt>Data:</dt><dd>513k Amazon laptop and camera reviews from a 
+			<a href = "http://sifaka.cs.uiuc.edu/~wang296/Data/index.html">collection</a> 
+			of raw JSON files, stored in a MySQL database. </dd>
+	<dt>Backend:</dt><dd>Python, pandas, numpy, scikit-learn and NLTK to do the heavy lifting; SQLalchemy for interfacing with MySQL.</dd>
+	<dt>Frontend:</dt><dd>Flask, Bootstrap, D3 & JavaScript, all deployed on AWS.</dd>
+</dl>
+{% endblock %}

@@ -26,7 +26,7 @@
    </div>
 </form>
 </div>
-	<div class = "container" id = "error_container" style = "display: none; text-align: center"> 
+	<div class = "container" id = "error_container" style = "display: inherit; text-align: center"> 
 		<p class = "lead"> Oops! This product seems to be absent from our database.</p>	
 		<p> This web app is built upon a collection of 513k laptop and camera reviews from Amazon collected before 2012. <br>
 		    The feature of scraping the reviews from Amazon on the fly is not yet implemented.</p>

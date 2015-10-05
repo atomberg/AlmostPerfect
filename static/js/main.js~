@@ -155,7 +155,7 @@ var submitProductQuery = function() {
 		drawChart(svg, data.chart);
 		chart_index++;
 	}).fail(function() {
-		console.log( "Json request failed!" )
+	    console.log( "Json request failed!" )
 		
 
 	});

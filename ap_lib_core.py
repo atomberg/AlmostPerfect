@@ -5,13 +5,16 @@ Created on Mon Sep 14 10:55:45 2015
 @author: atomberg
 """
 
-import urllib, re
+import urllib, re, shelve, gdbm
 import math
 import numpy as np
 import pandas as pd  
 import nltk
 from sklearn.utils import resample
 from flask import Markup 
+
+def gdbm_shelve(filename, flag="c"): 
+    return shelve.Shelf(gdbm.open(filename, flag)) 
 
 def text_to_sentence_list(text):
     sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
