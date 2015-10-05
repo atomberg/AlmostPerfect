@@ -3,28 +3,34 @@
 {% block content %}
 	   
 <p class="lead">Choose a product from the list and we'll find you 4 keywords that are the most associated to its negative reviews. </p>
-
-
 <div class = "container">
 
 <form  action="/getresult" method="get" id="newProductForm">
-   <div class="form-group">
-	<label for="ID" class='lead'>Please pick a product: </label>
-	<select id="inputField" style="margin: 1px 20px;">
-	   <option value="B00FNPD1VW">Acer C720 Chromebook (11.6-Inch, 2GB)</option>
-	   <option value="B00GZ1GV3I">Acer C720 Chromebook (11.6-Inch, 2GB & 32GB SSD)</option>
-	   <option value="B00FFJ0HUE">ASUS T100 10.1-Inch Detachable Laptop</option>
-	   <option value="B007470SMM">Apple MacBook Pro MD102LL/A 13.3-Inch Laptop</option>
-	   <option value="B0074712UY">Apple MacBook Pro MD103LL/A 15.4-Inch Laptop</option>
-	   <option value="B0074703CM">Apple MacBook Pro MD101LL/A 13.3-Inch Laptop</option>
-	   <option value="B00B7JQQQA">ASUS VivoBook X202E-DH31T-PK 11.6-Inch Touch Notebook with Intel Core i3 Processor Windows 8, Pink</option>
-	</select>	
-	<!--<input type="text" id="inputField" name="ID" placeholder="e.g. B009M2YNWI" size="40" style="margin: 1px 20px;">-->
-	<button type="submit" class="btn btn-primary">Find this product!</button>
-   </div>
+	<div class="form-group">
+		<label class='lead'>Please pick a product: </label>
+		<select id="inputBox" style="margin: 1px 20px;">
+			<option value="B00FNPD1VW">Acer C720 Chromebook (11.6-Inch, 2GB)</option>
+			<option value="B00GZ1GV3I">Acer C720 Chromebook (11.6-Inch, 2GB & 32GB SSD)</option>
+			<option value="B009LL9VDG">Samsung Chromebook (Wi-Fi, 11.6-Inch)</option>
+			<option value="B009M2YNWI">Samsung Chromebook (3G, 11.6-Inch) 2012 Model</option>
+			<option value="B00FFJ0HUE">ASUS T100 10.1-Inch Detachable Laptop</option>
+			<option value="B007470SMM">Apple MacBook Pro MD102LL/A 13.3-Inch Laptop</option>
+			<option value="B0074712UY">Apple MacBook Pro MD103LL/A 15.4-Inch Laptop</option>
+			<option value="B0074703CM">Apple MacBook Pro MD101LL/A 13.3-Inch Laptop</option>
+			<option value="B00B7JQQQA">ASUS VivoBook X202E-DH31T-PK 11.6-Inch Touch Notebook with Intel Core i3 Processor Windows 8, Pink</option>
+			<option value="other">Other</option>
+		</select>	
+
+		<div class = "container-fluid" id = "other_input" style="display:none;">
+			<label>If you know the exact Amazon ID of the product you're looking for, enter it here:</label> 
+			<input type="text" id="inputField" placeholder="e.g. B009M2YNWI" size="20" style="margin: 1px 10px;">
+		</div>
+
+		<button type="submit" class="btn btn-primary">Find!</button>
+	</div>
 </form>
 </div>
-	<div class = "container" id = "error_container" style = "display: none; text-align: center"> 
+	<div class = "container bg-warning" id = "error_container" style = "display: none; text-align: center"> 
 		<p class = "lead"> Oops! This product seems to be absent from our database.</p>	
 		<p> This web app is built upon a collection of 513k laptop and camera reviews from Amazon collected before 2012. <br>
 		    The feature of scraping the reviews from Amazon on the fly is not yet implemented.</p>
@@ -35,6 +41,15 @@
 {% block scripts %}
 <script>
 var chart_index = 1;
+
+$('#inputBox').on('change',function(){
+    if( $(this).val()==="other"){
+    $("#other_input").show()
+    }
+    else{
+    $("#other_input").hide()
+    }
+});
 </script>
 <script src="../static/js/main.js"></script>
 {% endblock %}

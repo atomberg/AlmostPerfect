@@ -127,7 +127,10 @@ function getSnippetList (json_data) {
 var data_global;
 
 var submitProductQuery = function() {
-	var product_ID = d3.select('#inputField').property('value');
+	var product_ID = d3.select('#inputBox').property('value');
+	if (product_ID == 'other') {
+		product_ID = d3.select('#inputField').property('value');
+	}
 	console.log(product_ID);
 	$.getJSON("product/" + product_ID, function(result){ 
 		console.log("Json request succeded!");
@@ -138,7 +141,7 @@ var submitProductQuery = function() {
 		chart_index++;
 	}).fail(function() {
 		console.log( "Json request failed!" )
-		
+		$('#error_container').show();
 
 	});
 	d3.select('#inputField').property('value', '');
