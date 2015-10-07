@@ -31,12 +31,13 @@
 </form>
 </div>
 	<div class = "container bg-warning" id = "error_container" style = "display: none; text-align: center"> 
-		<p class = "lead"> Oops! This product seems to be absent from our database.</p>	
+		<p class = "lead"> Oops! This product seems to be absent from our database. <br>
+											 Would you like to <a href = "/explore">explore</a> it to find the product you're looking for?</p>	
 		<p> This web app is built upon a collection of 513k laptop and camera reviews from Amazon collected before 2012. <br>
-		    The feature of scraping the reviews from Amazon on the fly is not yet implemented.</p>
+				Newer models are unlikely to be in our database, since the feature of scraping the reviews from Amazon on the fly is not yet implemented.</p>
 	</div>
 	<div class = "container" id = "charts_container"> </div>
- {% endblock %}
+{% endblock %}
 
 {% block scripts %}
 <script>

@@ -133,6 +133,7 @@ var submitProductQuery = function() {
 	}
 	console.log(product_ID);
 	$.getJSON("product/" + product_ID, function(result){ 
+		$('#error_container').hide();
 		console.log("Json request succeded!");
 		var data = processJSON(result);
 		data_global = data
@@ -184,6 +185,7 @@ function drawChart(chart_selector, data){
 
 	chart_selector.selectAll('links')
 		.data(data).enter().append('a')
+			.attr('target', "_blank")
 			.attr('xlink:href', function(d) {return d.link;})
 			.append('text')
 				.attr('y', function(d, i) { return 15 + i * 22; })
