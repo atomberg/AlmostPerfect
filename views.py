@@ -28,8 +28,7 @@ def fetch_json(product_id):
         cache.close()
     
     return jsonify(result)
-
-
+    
 @app.route('/about')
 def about():
     return render_template("about.html")
@@ -60,18 +59,28 @@ def product_info(product_id):
 @app.route("/reviews/<path:product_id>")
 def reviews_table(product_id):
     keyword = request.args.get('keyword')
-    padded_key = " " + keyword + " "
+    #padded_key = " " + keyword + " "
+    mysql_key = " ".join(["+" + w for w in keyword.split(' ')])
 
     query = '''SELECT Title, Content, Overall FROM reviews 
-                WHERE (ProductID = '%s' AND Content LIKE \"%%%%%s%%%%\") 
-                ORDER BY Overall;''' % (product_id, padded_key)
+            WHERE (
+            ProductID = '%s' 
+            AND 
+            MATCH(Content) AGAINST (\'%s\' IN BOOLEAN MODE)
+            ) 
+            ORDER BY Overall;''' % (product_id, mysql_key)
     reviews_df = pd.read_sql(sql = query, con = db_connection_engine)
     
-    re_key = re.compile(re.escape(padded_key), re.IGNORECASE)
+    
+    regex = re.compile(re.escape(keyword), re.IGNORECASE)
     def highlight (text):
          # label label-success OR badge
-        return Markup(re_key.sub(' <span class="badge"><big>%s</big></span> ' % keyword, text))
+        return Markup(regex.sub(' <span class="badge"><big>%s</big></span> ' % keyword, text))
+        
+    def match_keyword (text):
+        return bool(regex.search(text))
     
+    reviews_df = reviews_df[reviews_df['Content'].map(match_keyword)]
     reviews_df['Content'] = reviews_df['Content'].map(highlight)  
     reviews_df.columns = ['title', 'content', 'rating']
                            
