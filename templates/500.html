@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<p class = "lead">
+	Something went wrong and the server returned an error. <br>
+	<small> Maybe the server is busy?</small>
+</p>
+<p class = "lead">
+	Please try refreshing the page in a second or two.
+</p>
+
+<h4> Error report </h4>
+<p>
+{{ error }}
+</p>
+{% endblock %}
