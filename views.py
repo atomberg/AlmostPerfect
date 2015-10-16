@@ -7,7 +7,7 @@ from ap_lib_core import *
 from sqlalchemy import create_engine
 from sklearn.feature_extraction.text import CountVectorizer
 
-db_connection_engine = create_engine('mysql://dummy:12345@127.0.0.1/amazon_reviews?charset=utf8')
+db_connection_engine = create_engine('mysql://dummy:12345@127.0.0.1/amazon_reviews?charset=utf8', pool_recycle = 3600)
 cache_file = 'json_cache.db'
 number_of_keywords_to_show = 4
 
